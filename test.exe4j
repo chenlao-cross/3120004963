@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exe4j version="8.0" transformSequenceNumber="3">
+  <directoryPresets config="D:/打包" />
+  <application name="test" distributionSourceDir="D:/打包" />
+  <executable name="test" wrapperType="embed" executableDir="." executableMode="gui" singleInstance="true" />
+  <java mainClass="cctv.SwingTest2" minVersion="1.6">
+    <searchSequence>
+      <registry />
+      <directory location="./jre" />
+    </searchSequence>
+    <classPath>
+      <archive location="D:/打包/cctv.jar" failOnError="false" />
+    </classPath>
+  </java>
+</exe4j>

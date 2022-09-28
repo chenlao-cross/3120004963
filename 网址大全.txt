@@ -1,0 +1,8 @@
+http://www.oracle.com/technetwork/java/javase/downloads/index.html  下载
+jdk-17.0.2
+D:\Program Files\Java\jdk-17.0.2\
+D:\Program Files\Java\jdk-17.0.2\bin
+
+https://course.educg.net/           java作业平台网站
+
+#define _CRT_SECURE_NO_WARNINGS 1//

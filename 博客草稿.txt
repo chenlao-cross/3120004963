@@ -1,0 +1,165 @@
+| 课程名称 | 软件工程 |
+| ------ | ------ |
+| 作业要求 | 个人项目作业-论文查重 |
+| GitHub仓库 | [GitHub仓库地址](https://github.com/chenlao-cross/3120004963.git) |
+
+**目录**
+ 
+-  <a href="#d1">**一、PSP表**格</a>
+-  <a href="#d2">二、编程思想</a>
+- <a href="#d3">三、模块接口的设计与实现过程</a>
+-  <a href="#d31">3.1 文件读写模块</a>
+- <a href="#d32">3.2分词处理模块</a>
+- <a href="#d33">3.3 余弦相似度计算模块</a>
+-  <a href="#d34">3.4 异常处理模块</a>
+- <a href="#d4">四、数据测试</a>
+- <a href="#d41">4.1样例测试1</a>
+- <a href="#d42">4.2样例测试2</a>
+- <a href="#d43">4.3样例测试3</a>
+- <a href="#d5">五、性能分析</a>
+
+
+**一、PSP表格**    <div id="d1" ><div>
+
+
+| PSP2.1 | Personal Software Process Stages |  预估耗时（分钟） |实际耗时（分钟）|
+  | ------ | ------ |  ------ | ------ |
+| Planning | 计划 | 30 |30 |
+| · Estimate | · 估计这个任务需要多少时间 | 30 | 30 |
+| Development |开发|60| 50 |
+|  Analysis |  需求分析 (包括学习新技术) | 30| 20 |
+| · Design Spec |  生成设计文档 | 25 | 25 |
+| · Design Review | · 设计复审 | 30 | 15 |
+|· Coding Standard  | 代码规范 (为目前的开发制定合适的规范)  |  15 |   30 |
+| Design |	· 具体设计   |  25 | 30   |
+| · Coding | 具体编码  |40  |  30  |
+| Code Review  |  · 代码复审 |  10 |  15  |
+|Test  |    测试（自我测试，修改代码，提交修改）| 20  |   10 |
+|  Reporting|  	报告 |  30 |30    |
+| · Test Report·  | · 测试报告  | 15  | 20   |
+| · Size Measurement·  | 计算工作量  | 10  |   10 |
+| · · Postmortem & Process Improvement Plan |	· 事后总结, 并提出过程改进计划   | 30  |   25 |
+| ·  | 合计  | 390  |350    |
+
+**二、编程思想** <div id="d2" ><div>
+
+main类读入原论文路径和抄袭论文路径，jieba分词处理、处理标点过滤，ensim.similarities.Similarity用于计算余弦相似度，结果写入save.txt文件
+test类输入两篇论文路径，进行异常处理，判断路径是否存在原论文文件或者抄袭论文文件。
+unit_test单元测试，假设预测的是前面第一组运行的测试数据，输出预测值。
+
+**三、 模块接口的设计与实现过程**    <div id="d3" ><div>
+
+3.1文件读写模块 <div id="d31" ><div>
+
+```python
+#获取指定路径的文件内容
+def get_file_contents(path):
+    str = ''
+    f = open(path, 'r', encoding='UTF-8')
+    line = f.readline()
+    while line:
+        str = str + line
+        line = f.readline()
+    f.close()
+    return str
+
+
+#使用f.readline()的读取方式，读取文本的第一行内容，转换为list，每个字节作为一个list元素。
+```
+3.2分词处理模块 <div id="d32" ><div>
+
+```python
+def filter(str):
+    str = jieba.lcut(str)
+    result = []
+    for tags in str:
+        if (re.match(u"[a-zA-Z0-9\u4e00-\u9fa5]", tags)):
+            result.append(tags)
+        else:
+            pass
+    return result
+
+
+#使用jieba.lcut()函数进行中文分词，将句子精确切开
+#使用正则表达式删除论文的标点符号和换行符
+```
+3.3余弦相似度计算模块<div id="d33" ><div>
+
+```python
+#传入过滤之后的数据，通过调用gensim.similarities.Similarity计算余弦相似度
+def calc_similarity(text1,text2):
+    texts=[text1,text2]
+    dictionary = gensim.corpora.Dictionary(texts)
+    corpus = [dictionary.doc2bow(text) for text in texts]
+    similarity = gensim.similarities.Similarity('-Similarity-index', corpus, num_features=len(dictionary))
+    test_corpus_1 = dictionary.doc2bow(text1)
+    cosine_sim = similarity[test_corpus_1][1]
+    return cosine_sim
+
+
+#使用gensim.Dictionary.doc2bow()函数构建词典的向量模型，统计每个词的出现频率。
+#使用gensim.similarities.Similarity()函数计算余弦相似度。
+
+```
+3.4异常处理模块<div id="d34" ><div>
+
+```python
+def main_test():
+    path1 = input("输入论文原文的文件的绝对路径：")
+    path2 = input("输入抄袭版论文的文件的绝对路径：")
+    if not os.path.exists(path1) :
+        print("论文原文文件不存在！")
+        exit()
+    if not os.path.exists(path2):
+        print("抄袭版论文文件不存在！")
+        exit()
+
+
+#在读取指定文件路径时，如果文件路径不存在，程序将会出现异常，因此可以在读取指定文件内容之前先判断文件是否存在，若不存在则做出响应并且结束程序。
+#引入os.path.exists()方法用于检验文件是否存在
+
+```
+四、数据测试<div id="d4" ><div>
+
+4.1、样例测试1<div id="d41" ><div>
+
+1. test1.txt内容：今天是星期天，天气晴，今天晚上我要去看电影。
+2. test2.txt内容：今天是周天，天气晴朗，我晚上要去看电影。
+
+运行后生成结果保存在save.txt文档，结果为0.6139，文章相似度为0.6139.
+
+![img](https://img-community.csdnimg.cn/images/00bbfebe6d11454ab5599500a0366d66.png "#left")
+
+4.2、样例测试2<div id="d42" ><div>
+ 
+ 
+- 测试所给文档：orig.txt和orig_0.8_add.txt,文章相似度比较大为0.9917，为抄袭论文。
+
+
+![img](https://img-community.csdnimg.cn/images/57217f38a7e64591bf08a0d66c8a089e.png "#left")
+
+4.3、样例测试3<div id="d43" ><div>
+
+- 测试不存在抄袭论文文件的情况(不存在绝对路径为：D://pythonProject1//test//chao.txt的抄袭论文文件)
+
+![img](https://img-community.csdnimg.cn/images/1f4308c07a484fed9fc56feb229add14.png "#left")
+
+- 测试不存在原论文文件的情况(不存在绝对路径为：D://pythonProject1//test//yuan.txt的原论文文件)
+
+![img](https://img-community.csdnimg.cn/images/5ca53769f753425e8c54944b31eae831.png "#left")
+
+五、性能分析<div id="d5" ><div>
+
+利用pycharm的插件可以得到耗费时间的几个主要函数排名：
+![img](https://img-community.csdnimg.cn/images/ca7c25d21682419aa35bbc48eb9ed25a.png "#left")
+
+main类函数：
+![img](https://img-community.csdnimg.cn/images/09ad14a5362942738e164ea45bfe5c68.png "#left")
+
+test类函数：
+![img](https://img-community.csdnimg.cn/images/5baa0f1ccb784893a4291542dfec01d7.png "#left")
+
+
+
+
+

@@ -1,0 +1,261 @@
+
+| 姓名 | 学号 |GitHub项目地址|
+| ------ | ------ |------|
+| 陈烙 | 3120004963 |    https://github.com/chenlao-cross/3120004963.git     | 
+| 李卓航 | 3120005339 | https://github.com/dadizhimu/3120005339 |
+
+
+[toc]
+<br>
+#### 一、PSP表
+
+| PSP2.1 | Personal Software Process Stages |  预估耗时（分钟） |实际耗时（分钟）|
+  | ------ | ------ |  ------ | ------ |
+| Planning | 计划 | 50 |60 |
+| · Estimate | · 估计这个任务需要多少时间 | 60 | 60 |
+| Development |开发|400| 450 |
+|  Analysis |  需求分析 (包括学习新技术) | 80| 70 |
+| · Design Spec |  生成设计文档 | 25 | 25 |
+| · Design Review | · 设计复审 | 30 | 15 |
+|· Coding Standard  | 代码规范 (为目前的开发制定合适的规范)  |  15 |   30 |
+| Design |	· 具体设计   |  45 | 35   |
+| · Coding | 具体编码  |80  |  80  |
+| Code Review  |  · 代码复审 |  35 |  25  |
+|Test  |    测试（自我测试，修改代码，提交修改）| 20  |   15 |
+|  Reporting|  	报告 |  30 |30    |
+| · Test Report·  | · 测试报告  | 35  | 30   |
+| · Size Measurement·  | 计算工作量  | 20  |   20 |
+| ·  Postmortem & Process Improvement Plan |	· 事后总结, 并提出过程改进计划   | 30  |   25 |
+| ·  | 合计  | 920  |950    |
+
+#### 二、效能分析
+##### 2.1性能测试
+
+![img](https://img-community.csdnimg.cn/images/40a0fdb690d94f68818f94a7bce7a438.png "#left")
+
+##### 2.2内存分析
+
+![img](https://img-community.csdnimg.cn/images/76bca567af2a44fe846559e3c5d93413.png "#left")
+
+#### 三、设计实现过程
+##### 层次结构
+
+![img](https://img-community.csdnimg.cn/images/07febd9693d8455cad779b123aa02109.png "#left")
+
+
+#### 四、代码说明
+##### Main模块
+Main模块部分代码
+```java
+public static void menu()；//菜单界面，调用以下两个方法以实现两个功能
+    public static void createMenu()；//题目生成菜单，实现题目生成功能
+    public static void checkMenu()；//答案校验菜单，实现答案校验功能
+```
+##### Expression模块
+生成题目:
+```java
+
+public static String[] expressionCreat(int range) {
+        String arr[] = new String[2];
+        int nOfNum1 = (int) (random.nextInt(range));//numeratorOfNum1-第一个数的分子
+        int dOfNum1 = (int) (random.nextInt(range));//denominatorOfNum1-第一个数的分母
+        int nOfNum2 = (int) (random.nextInt(range));//numeratorOfNum2
+        int dOfNum2 = (int) (random.nextInt(range));//denominatorOfNum2
+        int symbol = (int) (random.nextInt(4));
+
+        //分母均不为0
+        if (dOfNum1 != 0 && dOfNum2 != 0) {
+            if (symbol == 0) {
+                numerator = nOfNum1 * dOfNum2 + dOfNum1 * nOfNum2;
+                denominator = dOfNum1 * dOfNum2;
+                arr[0] = improperFractionToTrue(nOfNum1, dOfNum1) + "\t+\t" + improperFractionToTrue(nOfNum2, dOfNum2) + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(numerator, denominator);
+                return arr;
+            }
+            if (symbol == 1 && nOfNum1 * dOfNum2 - dOfNum1 * nOfNum2 >= 0) {
+                numerator = nOfNum1 * dOfNum2 - dOfNum1 * nOfNum2;
+                denominator = dOfNum1 * dOfNum2;
+                arr[0] = improperFractionToTrue(nOfNum1, dOfNum1) + "\t-\t" + improperFractionToTrue(nOfNum2, dOfNum2) + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(numerator, denominator);
+                return arr;
+            }
+            if (symbol == 1 && nOfNum1 * dOfNum2 - dOfNum1 * nOfNum2 < 0) {
+                numerator = dOfNum1 * nOfNum2 - nOfNum1 * dOfNum2;
+                denominator = dOfNum1 * dOfNum2;
+                arr[0] = improperFractionToTrue(nOfNum2, dOfNum2) + "\t-\t" + improperFractionToTrue(nOfNum1, dOfNum1) + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(numerator, denominator);
+                return arr;
+            }
+            if (symbol == 2) {
+                numerator = nOfNum1 * nOfNum2;
+                denominator = dOfNum1 * dOfNum2;
+                arr[0] = improperFractionToTrue(nOfNum1, dOfNum1) + "\t×\t"+ improperFractionToTrue(nOfNum2, dOfNum2) + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(numerator, denominator);
+                return arr;
+            }
+            if (symbol == 3 && nOfNum2 != 0) {
+                numerator = nOfNum1 * dOfNum2;
+                denominator = dOfNum1 * nOfNum2;
+                arr[0] = improperFractionToTrue(nOfNum1, dOfNum1) + "\t÷\t"+ improperFractionToTrue(nOfNum2, dOfNum2) + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(numerator, denominator);
+                return arr;
+            }
+            if (symbol == 3 && nOfNum2 == 0) {
+                arr[0] = "false";
+                return arr;
+            }
+        }
+        //分母有0,忽略分母计算
+        else {
+            dOfNum1 = 1;
+            dOfNum2 = 1;
+            if (symbol == 0) {
+                arr[0] = nOfNum1 + "\t+\t" + nOfNum2 + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = String.valueOf(nOfNum1+nOfNum2);
+                return arr;
+            }
+            if (symbol == 1 && nOfNum1-nOfNum2 >= 0) {
+                arr[0] = nOfNum1 + "\t-\t" + nOfNum2 + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = String.valueOf(nOfNum1-nOfNum2);
+                return arr;
+            }
+            if (symbol == 1 && nOfNum1-nOfNum2 < 0) {
+                arr[0] = nOfNum2 + "\t-\t" + nOfNum1 + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = String.valueOf(nOfNum2-nOfNum1);
+                return arr;
+            }
+            if (symbol == 2) {
+                arr[0] = nOfNum2 + "\t×\t" + nOfNum1 + "\t= ";
+                System.out.println(arr[0]);
+                arr[1] = String.valueOf(nOfNum1*nOfNum2);
+                return arr;
+            }
+            if (symbol == 3 && nOfNum2 != 0) {
+                arr[0] = nOfNum1 + "\t÷\t" + nOfNum2 + "\t=";
+                System.out.println(arr[0]);
+                arr[1] = reductionofFraction(nOfNum1,nOfNum2);
+                return arr;
+            }
+            if (symbol == 3 && nOfNum2 == 0) {
+                arr[0] = "false";
+                return arr;
+            }
+        }
+        arr[0]="false";
+        return arr;
+    }
+```
+对分数处理：
+```java
+
+ public static String reductionofFraction(int a, int b) {// 分数约分，用于计算结果
+        int y = 1;
+        for (int i = a; i >= 1; i--) {
+            if (a % i == 0 && b % i == 0) {
+                y = i;
+                break;
+            }
+        }
+        int z = a / y;// 分子
+        int m = b / y;// 分母
+        if (z == 0) {
+            return "0";
+        }
+        if(m==1) return z+"";
+        else  return improperFractionToTrue(z,m);
+
+    }
+
+    public static String improperFractionToTrue(int a, int b) {//判断假分数，并化假分数为带分数
+        if(a>=b) return a%b==0?String.valueOf(a/b):a/b+"'"+a%b+"/"+b;
+        return a+"/"+b;
+    }
+}
+
+```
+##### TxtInOut模块
+读写文件功能
+```java
+ public static String[] readTxt(String absPath);
+ public static void writeTxt(String[] str,String absPath);
+```
+查询文件行数
+```java
+ public static int checkLineNum(String absPath)throws Exception{
+        File file = new File(absPath);
+        FileInputStream fis = new FileInputStream(file);
+        byte[] byteArray = new byte[(int)file.length()];
+        fis.read(byteArray);
+        String data = new String(byteArray);
+        String[] stringArray = data.split("\r\n");
+        return stringArray.length;
+    }
+```
+生成校验文件（校验代码块）
+```java
+  String youranwers[]=readTxt(absPathOfYourAns);
+  String result[]=readTxt(absPathOfResult);
+
+    int rightNum[]=new int[youranwers.length+2];
+    int wrongNum[]=new int[youranwers.length+2];
+    int rightCount=0;
+    int wrongCount=0;
+
+    for(int j=0;j<youranwers.length;j++){
+        if(youranwers[j].equals(result[j])) {//验证答案，统计正确和错误的个数
+
+            rightNum[j]=j+1;
+            rightCount++;
+            }
+            else {
+
+            wrongNum[j]=j+1;
+            wrongCount++;
+            }
+        }
+```
+#### 五、测试运行
+##### 5.1测试运行1
+生成题目：
+
+![img](https://img-community.csdnimg.cn/images/4d8718364ad946e4b275a13f4a5d1686.png "#left")
+
+题目文件：
+
+![img](https://img-community.csdnimg.cn/images/b2df1888a4e44083828a01d1f8b1921a.png "#left")
+
+答案文件：
+
+![img](https://img-community.csdnimg.cn/images/a59dae10ec334deca1989444ad35d086.png "#left")
+
+
+##### 5.2测试运行2
+选择较检题目：
+
+![img](https://img-community.csdnimg.cn/images/6f46e4235d6d4a159850f5b33c90bb5d.png "#left")
+
+题目较检：
+
+![img](https://img-community.csdnimg.cn/images/6957d8d7a5dd47a78193d8b77db6b895.png "#left")
+
+##### 5.3生成一万道题
+
+![img](https://img-community.csdnimg.cn/images/a2cf8c6dcaf646d6babcad376bf5f94b.png "#left")
+
+#### 六、总结
+- 陈烙：第一次尝试组队合作，收获颇多，这次项目我们进行了线下和线上的讨论，研究项目的细节与大致的框架，确定好方向，认真研究分析项目需求，让我了解到软件工程这门课程的意义；在开发的过程中，我们积极交流，认真聆听对方的意见，取得较好效果。
+
+- 李卓航：在本次结对编程项目中，我感受到了结对编程与个人编程的不同之处，个人编程时自己会拖拖拉拉，把事情拖到最后才做，而结对编程需要对伙伴负责，因此不能拖拖拉拉的，因此有了很高的学习效率与工作效率。此外，在结对编程项目中，有伙伴提出的观点和技术支撑，在讨论中能做到事半功倍的效果，是一次很好的学习体验。
+
+
+
+
+
